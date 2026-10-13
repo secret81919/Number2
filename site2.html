@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пельменский Союз — Система рангов</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231a1a1a'/><path d='M50 20 L70 40 L60 40 L60 70 L40 70 L40 40 L30 40 Z' fill='%23fff'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#ffffff;
+--bg-2:#fafafa;
+--bg-3:#f4f4f4;
+--bg-4:#eaeaea;
+--txt:#0a0a0a;
+--txt-2:#4a4a4a;
+--txt-3:#8a8a8a;
+--txt-4:#b5b5b5;
+--brd:#e8e8e8;
+--brd-2:#d4d4d4;
+--acc:#0a0a0a;
+--acc-h:#2a2a2a;
+--ok:#0a8754;
+--warn:#a8730a;
+--err:#a82020;
+--info:#1a4fa8;
+--r:4px;
+--r-lg:8px;
+--r-xl:12px;
+--sh:0 1px 2px rgba(0,0,0,.04);
+--sh-lg:0 4px 24px rgba(0,0,0,.06);
+--sh-xl:0 12px 48px rgba(0,0,0,.08);
+--max:1200px;
+--f-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+--f-serif:'Playfair Display',Georgia,serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+html{scroll-behavior:smooth}
+body{font-family:var(--f-sans);background:var(--bg);color:var(--txt);font-size:15px;line-height:1.65;letter-spacing:-.005em;overflow-x:hidden}
+::selection{background:var(--txt);color:#fff}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none;transition:.2s}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;transition:.2s}
+svg{display:block}
+.container{max-width:var(--max);margin:0 auto;padding:0 32px}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--brd)}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;gap:48px}
+.nav-brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:15px;letter-spacing:-.02em}
+.nav-brand svg{width:26px;height:26px}
+.nav-brand .sub{font-size:11px;color:var(--txt-3);font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding-left:10px;border-left:1px solid var(--brd-2);margin-left:4px}
+.nav-links{display:flex;gap:4px;margin-left:auto;align-items:center}
+.nav-links a{padding:8px 14px;font-size:13.5px;font-weight:500;color:var(--txt-2);border-radius:var(--r);transition:.15s}
+.nav-links a:hover{color:var(--txt);background:var(--bg-3)}
+.nav-links a.active{color:var(--txt);font-weight:600}
+.nav-cta{margin-left:16px;padding:8px 16px;background:var(--txt);color:#fff;border-radius:var(--r);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+.nav-cta:hover{background:var(--acc-h);transform:translateY(-1px)}
+.nav-cta svg{width:14px;height:14px}
+
+.hero{padding:100px 0 80px;border-bottom:1px solid var(--brd);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--brd) 1px,transparent 1px),linear-gradient(90deg,var(--brd) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000 0%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000 0%,transparent 70%);opacity:.4;pointer-events:none}
+.hero-inner{position:relative;z-index:1}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--brd-2);border-radius:100px;font-size:12px;font-weight:600;color:var(--txt-2);margin-bottom:28px;background:var(--bg)}
+.badge .dot{width:6px;height:6px;background:var(--ok);border-radius:50%;box-shadow:0 0 0 3px rgba(10,135,84,.15);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.hero h1{font-family:var(--f-serif);font-size:clamp(38px,6vw,68px);line-height:1.08;font-weight:600;letter-spacing:-.03em;max-width:900px;margin-bottom:24px}
+.hero h1 em{font-style:italic;color:var(--txt-3)}
+.hero .lead{font-size:clamp(16px,1.6vw,19px);color:var(--txt-2);max-width:640px;line-height:1.6;margin-bottom:40px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;border-radius:var(--r-lg);font-size:14px;font-weight:600;letter-spacing:-.01em;transition:.2s;cursor:pointer;border:1px solid transparent}
+.btn svg{width:16px;height:16px}
+.btn-primary{background:var(--txt);color:#fff}
+.btn-primary:hover{background:var(--acc-h);transform:translateY(-1px);box-shadow:var(--sh-lg)}
+.btn-secondary{background:var(--bg);color:var(--txt);border-color:var(--brd-2)}
+.btn-secondary:hover{background:var(--bg-3);border-color:var(--txt-3)}
+.btn-ghost{color:var(--txt-2);padding:14px 8px}
+.btn-ghost:hover{color:var(--txt)}
+.btn-ghost svg{transition:.2s}
+.btn-ghost:hover svg{transform:translateX(3px)}
+
+.hero-stats{margin-top:80px;padding-top:40px;border-top:1px solid var(--brd);display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+.stat .num{font-family:var(--f-serif);font-size:36px;font-weight:600;letter-spacing:-.03em;line-height:1;margin-bottom:8px}
+.stat .num .unit{font-size:20px;color:var(--txt-3);font-weight:400}
+.stat .lbl{font-size:12px;font-weight:500;color:var(--txt-3);text-transform:uppercase;letter-spacing:.08em}
+
+section{padding:96px 0}
+section.alt{background:var(--bg-2)}
+.sec-head{max-width:720px;margin-bottom:64px}
+.sec-label{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--txt-3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:20px}
+.sec-label::before{content:'';width:24px;height:1px;background:var(--txt-3)}
+.sec-head h2{font-family:var(--f-serif);font-size:clamp(28px,3.6vw,44px);font-weight:600;letter-spacing:-.025em;line-height:1.15;margin-bottom:16px}
+.sec-head p{font-size:16px;color:var(--txt-2);line-height:1.6;max-width:560px}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.card{background:var(--bg);border:1px solid var(--brd);border-radius:var(--r-xl);padding:32px;transition:.25s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--brd-2);box-shadow:var(--sh-lg);transform:translateY(-2px)}
+.card-ico{width:44px;height:44px;border-radius:var(--r-lg);background:var(--bg-3);display:flex;align-items:center;justify-content:center;margin-bottom:24px;color:var(--txt);transition:.25s}
+.card:hover .card-ico{background:var(--txt);color:#fff}
+.card-ico svg{width:22px;height:22px}
+.card h3{font-size:18px;font-weight:600;letter-spacing:-.015em;margin-bottom:10px}
+.card p{font-size:14.5px;color:var(--txt-2);line-height:1.65;margin-bottom:20px}
+.card-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--txt);transition:.2s}
+.card-link svg{width:14px;height:14px;transition:.2s}
+.card:hover .card-link svg{transform:translateX(3px)}
+
+.ranks{display:flex;flex-direction:column;gap:0;margin-top:24px;border-top:1px solid var(--brd)}
+.rank{display:grid;grid-template-columns:80px 1fr auto;gap:40px;padding:40px 0;border-bottom:1px solid var(--brd);align-items:start;transition:.25s;position:relative}
+.rank:hover{background:var(--bg-2);padding-left:24px;padding-right:24px;margin:0 -24px}
+.rank-num{font-family:var(--f-serif);font-size:48px;font-weight:600;color:var(--txt-4);line-height:1;letter-spacing:-.04em;transition:.25s}
+.rank:hover .rank-num{color:var(--txt)}
+.rank-body h4{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px;display:flex;align-items:center;gap:12px}
+.rank-body .sub{font-size:13px;color:var(--txt-3);margin-bottom:16px;font-weight:500}
+.rank-body p{font-size:15px;color:var(--txt-2);line-height:1.7;margin-bottom:20px;max-width:640px}
+.rank-body ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+.rank-body li{display:flex;gap:12px;font-size:14.5px;color:var(--txt-2);line-height:1.6}
+.rank-body li svg{width:16px;height:16px;flex-shrink:0;margin-top:4px;color:var(--ok)}
+.rank-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--bg-3);color:var(--txt-2);white-space:nowrap}
+.rank-tag.new{background:rgba(10,135,84,.08);color:var(--ok)}
+.rank-tag.mid{background:rgba(26,79,168,.08);color:var(--info)}
+.rank-tag.high{background:rgba(168,115,10,.08);color:var(--warn)}
+.rank-tag.elite{background:var(--txt);color:#fff}
+
+.tasks{margin-top:32px;border-top:1px solid var(--brd)}
+.task{display:grid;grid-template-columns:auto 1fr auto;gap:28px;padding:28px 0;border-bottom:1px solid var(--brd);align-items:center;transition:.25s}
+.task:hover{background:var(--bg-2);padding-left:24px;padding-right:24px;margin:0 -24px}
+.task-check{width:24px;height:24px;border-radius:6px;border:2px solid var(--brd-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.25s;cursor:pointer}
+.task-check:hover{border-color:var(--txt)}
+.task-check.done{background:var(--txt);border-color:var(--txt)}
+.task-check.done svg{opacity:1;color:#fff}
+.task-check svg{width:14px;height:14px;opacity:0;transition:.2s}
+.task-body h5{font-size:16px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
+.task-body p{font-size:14px;color:var(--txt-2);line-height:1.6;max-width:560px}
+.task-body .meta{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;font-size:12px;color:var(--txt-3);font-weight:500}
+.task-body .meta span{display:flex;align-items:center;gap:6px}
+.task-body .meta svg{width:14px;height:14px}
+.task-reward{display:flex;align-items:center;gap:10px;padding:8px 16px;background:var(--bg-3);border-radius:100px;font-size:13px;font-weight:600;color:var(--txt);white-space:nowrap}
+.task-reward svg{width:14px;height:14px;color:var(--warn)}
+
+.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:40px}
+.level{background:var(--bg);border:1px solid var(--brd);border-radius:var(--r-xl);padding:24px 20px;text-align:center;transition:.25s;position:relative;overflow:hidden}
+.level:hover{border-color:var(--txt);transform:translateY(-4px);box-shadow:var(--sh-lg)}
+.level-ico{width:52px;height:52px;border-radius:50%;background:var(--bg-3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--txt);transition:.25s}
+.level:hover .level-ico{background:var(--txt);color:#fff;transform:scale(1.05)}
+.level-ico svg{width:26px;height:26px}
+.level h4{font-size:15px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
+.level .xp{font-size:12px;color:var(--txt-3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.level p{font-size:13px;color:var(--txt-2);line-height:1.55}
+
+.steps{display:grid;gap:0;margin-top:24px;border-top:1px solid var(--brd)}
+.step{display:grid;grid-template-columns:80px 1fr auto;gap:40px;padding:40px 0;border-bottom:1px solid var(--brd);align-items:start;transition:.25s}
+.step:hover{background:var(--bg-2);padding-left:24px;padding-right:24px;margin:0 -24px}
+.step-num{font-family:var(--f-serif);font-size:48px;font-weight:600;color:var(--txt-4);line-height:1;letter-spacing:-.04em;transition:.25s}
+.step:hover .step-num{color:var(--txt)}
+.step-body h4{font-size:20px;font-weight:600;letter-spacing:-.02em;margin-bottom:12px}
+.step-body p{font-size:15px;color:var(--txt-2);line-height:1.7;margin-bottom:16px;max-width:640px}
+.step-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--bg-3);color:var(--txt-2);white-space:nowrap}
+.step-tag.required{background:rgba(168,32,32,.08);color:var(--err)}
+.step-tag.optional{background:rgba(26,79,168,.08);color:var(--info)}
+
+.table-wrap{margin-top:32px;border:1px solid var(--brd);border-radius:var(--r-xl);overflow:hidden;background:var(--bg)}
+.table{width:100%;border-collapse:collapse;font-size:14.5px}
+.table thead{background:var(--bg-3)}
+.table th{padding:16px 24px;text-align:left;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-2);border-bottom:1px solid var(--brd)}
+.table td{padding:20px 24px;border-bottom:1px solid var(--brd);vertical-align:middle}
+.table tbody tr:last-child td{border-bottom:none}
+.table tbody tr:hover{background:var(--bg-2)}
+.table .rank-cell{display:flex;align-items:center;gap:12px;font-weight:600}
+.table .rank-cell .dot{width:10px;height:10px;border-radius:50%;background:var(--txt);flex-shrink:0}
+.table .rank-cell .dot.ok{background:var(--ok)}
+.table .rank-cell .dot.info{background:var(--info)}
+.table .rank-cell .dot.warn{background:var(--warn)}
+.table .rank-cell .dot.err{background:var(--err)}
+.table .xp-cell{font-family:var(--f-serif);font-size:18px;font-weight:600;color:var(--txt)}
+
+.faq{margin-top:48px;border-top:1px solid var(--brd)}
+.faq-item{border-bottom:1px solid var(--brd);transition:.25s}
+.faq-q{width:100%;padding:24px 0;display:flex;justify-content:space-between;align-items:center;gap:24px;text-align:left;font-size:16px;font-weight:600;letter-spacing:-.01em;color:var(--txt);cursor:pointer;background:none;border:none}
+.faq-q:hover{color:var(--txt-2)}
+.faq-q svg{width:20px;height:20px;flex-shrink:0;transition:.3s;color:var(--txt-3)}
+.faq-item.open .faq-q svg{transform:rotate(45deg);color:var(--txt)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.22,1,.36,1)}
+.faq-a-inner{padding:0 0 28px 0;font-size:15px;color:var(--txt-2);line-height:1.7;max-width:800px}
+.faq-item.open .faq-a{max-height:400px}
+
+.cta-block{padding:80px 0;background:var(--txt);color:#fff;position:relative;overflow:hidden}
+.cta-block::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 30%,rgba(255,255,255,.08),transparent 50%),radial-gradient(circle at 80% 70%,rgba(255,255,255,.06),transparent 50%);pointer-events:none}
+.cta-inner{position:relative;z-index:1;text-align:center;max-width:720px;margin:0 auto}
+.cta-inner h2{font-family:var(--f-serif);font-size:clamp(28px,3.6vw,44px);font-weight:600;letter-spacing:-.025em;line-height:1.15;margin-bottom:20px}
+.cta-inner p{font-size:16px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:36px}
+.btn-inverse{background:#fff;color:var(--txt)}
+.btn-inverse:hover{background:rgba(255,255,255,.9);transform:translateY(-1px);box-shadow:0 8px 32px rgba(255,255,255,.2)}
+.btn-outline-inverse{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2)}
+.btn-outline-inverse:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05)}
+.cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+.footer{background:var(--bg-2);border-top:1px solid var(--brd);padding:64px 0 32px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:64px;margin-bottom:56px}
+.footer-brand{max-width:320px}
+.footer-brand .logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:15px;letter-spacing:-.02em;margin-bottom:16px}
+.footer-brand .logo svg{width:26px;height:26px}
+.footer-brand p{font-size:14px;color:var(--txt-2);line-height:1.6;margin-bottom:20px}
+.footer-col h5{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-3);margin-bottom:20px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+.footer-col a{font-size:14px;color:var(--txt-2)}
+.footer-col a:hover{color:var(--txt)}
+.footer-bottom{padding-top:32px;border-top:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.footer-bottom p{font-size:13px;color:var(--txt-3)}
+.footer-socials{display:flex;gap:8px}
+.footer-socials a{width:36px;height:36px;border-radius:var(--r-lg);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;color:var(--txt-2)}
+.footer-socials a:hover{background:var(--txt);color:#fff;border-color:var(--txt)}
+.footer-socials svg{width:16px;height:16px}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:900px){
+.hero-stats{grid-template-columns:repeat(2,1fr);gap:24px}
+.grid-3,.grid-2{grid-template-columns:1fr;gap:16px}
+.levels{grid-template-columns:repeat(2,1fr)}
+.rank,.step{grid-template-columns:60px 1fr;gap:24px}
+.rank-num,.step-num{font-size:36px}
+.rank-tag,.step-tag{grid-column:1/-1;justify-self:start;margin-left:84px}
+.task{grid-template-columns:auto 1fr;gap:20px}
+.task-reward{grid-column:1/-1;justify-self:start;margin-left:52px}
+.footer-grid{grid-template-columns:1fr 1fr;gap:40px}
+.table{font-size:13px}
+.table th,.table td{padding:14px 16px}
+.nav-links a:not(.nav-cta){display:none}
+}
+@media(max-width:600px){
+.container,.nav-inner{padding:0 20px}
+section{padding:64px 0}
+.hero{padding:64px 0 48px}
+.hero-stats{grid-template-columns:1fr;gap:24px;padding-top:32px;margin-top:56px}
+.levels{grid-template-columns:1fr}
+.footer-grid{grid-template-columns:1fr;gap:40px}
+.table-wrap{overflow-x:auto}
+.table{min-width:600px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+<div class="nav-inner">
+<a href="#" class="nav-brand">
+<svg viewBox="0 0 100 100" fill="none">
+<rect width="100" height="100" rx="22" fill="#0a0a0a"/>
+<path d="M50 20 L70 40 L60 40 L60 70 L40 70 L40 40 L30 40 Z" fill="#fff"/>
+</svg>
+Пельменский Союз
+<span class="sub">Minecraft</span>
+</a>
+<div class="nav-links">
+<a href="#ranks" class="active">Ранги</a>
+<a href="#tasks">Задания</a>
+<a href="#xp">Опыт</a>
+<a href="#faq">FAQ</a>
+<a href="#join" class="nav-cta">
+Вступить
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+</a>
+</div>
+</div>
+</nav>
+
+<header class="hero">
+<div class="container hero-inner">
+<div class="badge reveal">
+<span class="dot"></span>
+Набор в клан открыт
+</div>
+<h1 class="reveal">Система рангов <em>и заданий</em> Пельменского Союза</h1>
+<p class="lead reveal">Полное руководство по карьерной лестнице в клане Minecraft: от новобранца до маршала. Выполняйте задания, зарабатывайте опыт и поднимайтесь по службе.</p>
+<div class="hero-actions reveal">
+<a href="#ranks" class="btn btn-primary">
+Смотреть ранги
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+</a>
+<a href="#tasks" class="btn btn-secondary">Задания</a>
+<a href="#faq" class="btn btn-ghost">
+Частые вопросы
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+</a>
+</div>
+<div class="hero-stats">
+<div class="stat reveal"><div class="num">8</div><div class="lbl">Рангов в клане</div></div>
+<div class="stat reveal"><div class="num">250<span class="unit">K</span></div><div class="lbl">Всего опыта клана</div></div>
+<div class="stat reveal"><div class="num">64</div><div class="lbl">Активных бойцов</div></div>
+<div class="stat reveal"><div class="num">365<span class="unit">д</span></div><div class="lbl">Возраст клана</div></div>
+</div>
+</div>
+</header>
+
+<section id="ranks">
+<div class="container">
+<div class="sec-head reveal">
+<div class="sec-label">Иерархия</div>
+<h2>Ранги в Пельменском Союзе</h2>
+<p>Восемь ступеней карьерной лестницы. Каждый ранг открывает новые возможности, обязанности и привилегии в клане. Повышение происходит автоматически при достижении необходимого количества опыта.</p>
+</div>
+<div class="ranks">
+<div class="rank reveal">
+<div class="rank-num">01</div>
+<div class="rank-body">
+<h4>Новобранец</h4>
+<div class="sub">Начальный ранг · 0–500 XP</div>
+<p>Стартовая точка для каждого нового члена клана. Доступ к базовым ресурсам и ознакомительным заданиям. Цель — быстро пройти испытательный период и показать себя.</p>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Доступ к базе клана и общему складу</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Ознакомительные задания без награды</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Обязательное прохождение испытания (7 дней)</li>
+</ul>
+</div>
+<span class="rank-tag new">Новый</span>
+</div>
+
+<div class="rank reveal">
+<div class="rank-num">02</div>
+<div class="rank-body">
+<h4>Солдат</h4>
+<div class="sub">Базовый ранг · 500–2 000 XP</div>
+<p>Полноценный боец клана с базовыми правами. Основная боевая единица, участвующая в повседневной деятельности клана и выполнении регулярных заданий.</p>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Доступ ко всем публичным каналам клана</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Участие в PvP-турнирах и рейдах</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Базовый набор снаряжения и экипировки</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право на 3 сундука в общем хранилище</li>
+</ul>
+</div>
+<span class="rank-tag new">Базовый</span>
+</div>
+
+<div class="rank reveal">
+<div class="rank-num">03</div>
+<div class="rank-body">
+<h4>Ветеран</h4>
+<div class="sub">Средний ранг · 2 000–5 000 XP</div>
+<p>Опытный боец, участвующий в стратегических операциях клана. Имеет право командовать небольшим отрядом новобранцев и солдат во время рейдов.</p>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Улучшенное снаряжение (алмазный сет)</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право командовать отрядом до 5 человек</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Участие в закрытых стратегических собраниях</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Доступ к редким ресурсам клана</li>
+</ul>
+</div>
+<span class="rank-tag mid">Средний</span>
+</div>
+
+<div class="rank reveal">
+<div class="rank-num">04</div>
+<div class="rank-body">
+<h4>Капитан</h4>
+<div class="sub">Старший ранг · 5 000–10 000 XP</div>
+<p>Командир среднего звена. Управляет отрядами, отвечает за подготовку новых бойцов и координирует выполнение коллективных заданий клана.</p>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право командовать до 15 бойцов</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Незеритовое снаряжение по запросу</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Собственная группа в Discord с правами</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Обучающие полномочия для новичков</li>
+</ul>
+</div>
+<span class="rank-tag high">Старший</span>
+</div>
+
+<div class="rank reveal">
+<div class="rank-num">05</div>
+<div class="rank-body">
+<h4>Майор</h4>
+<div class="sub">Старший ранг · 10 000–20 000 XP</div>
+<p>Заместитель командира крупных операций. Отвечает за обороноспособность клана, ведёт разведку и участвует в принятии ключевых стратегических решений.</p>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право командовать до 30 бойцов</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Доступ к секретной базе клана</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право на личную охрану (2 бойца)</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Голос на военных советах клана</li>
+</ul>
+</div>
+<span class="rank-tag high">Старший</span>
+</div>
+
+<div class="rank reveal">
+<div class="rank-num">06</div>
+<div class="rank-body">
+<h4>Полковник</h4>
+<div class="sub">Высший ранг · 20 000–40 000 XP</div>
+<p>Руководитель крупных военных операций клана. Отвечает за целые направления деятельности: PvP, экономика, разведка или строительство.</p>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право командовать до 60 бойцов</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Полный доступ к клановой казне</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право на приём в клан новых бойцов</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Собственный канал в Discord с правами модерации</li>
+</ul>
+</div>
+<span class="rank-tag elite">Высший</span>
+</div>
+
+<div class="rank reveal">
+<div class="rank-num">07</div>
+<div class="rank-body">
+<h4>Генерал</h4>
+<div class="sub">Командование · 40 000–80 000 XP</div>
+<p>Второй человек в иерархии клана после Маршала. Координирует все военные и экономические процессы, замещает Маршала в его отсутствие.</p>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Полное командование всеми войсками клана</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право изменять систему заданий</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Участие в Совете клана</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право на создание дочерних отрядов</li>
+</ul>
+</div>
+<span class="rank-tag elite">Командование</span>
+</div>
+
+<div class="rank reveal">
+<div class="rank-num">08</div>
+<div class="rank-body">
+<h4>Маршал</h4>
+<div class="sub">Лидер клана · 80 000+ XP</div>
+<p>Основатель и верховный лидер Пельменского Союза. Финальная ступень карьерной лестницы, доступная только по прямому решению Совета клана.</p>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Абсолютные полномочия в клане</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Право вето на любое решение</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Назначение и снятие всех офицеров</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Полный контроль клановой казны</li>
+</ul>
+</div>
+<span class="rank-tag elite">Лидер</span>
+</div>
+</div>
+</div>
+</section>
+
+<section id="tasks" class="alt">
+<div class="container">
+<div class="sec-head reveal">
+<div class="sec-label">Задания</div>
+<h2>Ежедневные задания для бойцов</h2>
+<p>Все задания обязательны для выполнения и приносят опыт, который влияет на повышение ранга. Отмечайте выполненные задачи в личном кабинете клана.</p>
+</div>
+<div class="tasks">
+<div class="task reveal">
+<div class="task-check" data-task="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+<div class="task-body">
+<h5>Сбор ресурсов для клана</h5>
+<p>Добыть не менее 5 стаков любых руд (железо, золото, алмазы) и сдать их в общий склад клана.</p>
+<div class="meta">
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>30 минут</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Ежедневно</span>
+</div>
+</div>
+<div class="task-reward">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
++50 XP
+</div>
+</div>
+
+<div class="task reveal">
+<div class="task-check" data-task="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+<div class="task-body">
+<h5>Охрана клановой базы</h5>
+<p>Патрулирование территории клановой базы и прилегающих территорий. Отмечать подозрительную активность в общем чате.</p>
+<div class="meta">
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>20 минут</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Ежедневно</span>
+</div>
+</div>
+<div class="task-reward">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
++40 XP
+</div>
+</div>
+
+<div class="task reveal">
+<div class="task-check" data-task="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+<div class="task-body">
+<h5>Участие в рейде</h5>
+<p>Принять участие в организованном рейде клана на территорию противника или в PvP-турнире. Отмечается командиром отряда.</p>
+<div class="meta">
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>60 минут</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>По расписанию</span>
+</div>
+</div>
+<div class="task-reward">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
++150 XP
+</div>
+</div>
+
+<div class="task reveal">
+<div class="task-check" data-task="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+<div class="task-body">
+<h5>Помощь новобранцам</h5>
+<p>Провести с новым участником клана обучающую сессию: показать базу, рассказать правила и передать базовый набор ресурсов.</p>
+<div class="meta">
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>40 минут</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Ежедневно</span>
+</div>
+</div>
+<div class="task-reward">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
++75 XP
+</div>
+</div>
+
+<div class="task reveal">
+<div class="task-check" data-task="5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+<div class="task-body">
+<h5>Строительство укреплений</h5>
+<p>Принять участие в строительстве или улучшении оборонительных сооружений клановой базы: стен, башен, ловушек.</p>
+<div class="meta">
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>45 минут</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Ежедневно</span>
+</div>
+</div>
+<div class="task-reward">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
++60 XP
+</div>
+</div>
+
+<div class="task reveal">
+<div class="task-check" data-task="6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+<div class="task-body">
+<h5>Разведка территорий</h5>
+<p>Исследовать новые территории, найти полезные ресурсы, отметить координаты вражеских баз в карте клана.</p>
+<div class="meta">
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>50 минут</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Ежедневно</span>
+</div>
+</div>
+<div class="task-reward">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
++80 XP
+</div>
+</div>
+
+<div class="task reveal">
+<div class="task-check" data-task="7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+<div class="task-body">
+<h5>Экономическая активность</h5>
+<p>Принять участие в торговых операциях клана: продажа излишков, покупка нужных ресурсов, участие в аукционах.</p>
+<div class="meta">
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>25 минут</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Ежедневно</span>
+</div>
+</div>
+<div class="task-reward">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
++45 XP
+</div>
+</div>
+
+<div class="task reveal">
+<div class="task-check" data-task="8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+<div class="task-body">
+<h5>Участие в собрании клана</h5>
+<p>Присутствие на еженедельном общем собрании клана. Обсуждение планов, голосование по ключевым вопросам.</p>
+<div class="meta">
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>60 минут</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Еженедельно</span>
+</div>
+</div>
+<div class="task-reward">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
++100 XP
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="xp">
+<div class="container">
+<div class="sec-head reveal">
+<div class="sec-label">Система опыта</div>
+<h2>Уровни опыта и как их получить</h2>
+<p>Опыт (XP) — основная валюта карьерного роста. Задания, активность и вклад в развитие клана приносят XP. Чем выше уровень — тем больше возможностей.</p>
+</div>
+<div class="levels">
+<div class="level reveal">
+<div class="level-ico">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+</div>
+<h4>Уровень I</h4>
+<div class="xp">0 – 5 000 XP</div>
+<p>Базовая активность в клане, выполнение ежедневных заданий.</p>
+</div>
+<div class="level reveal">
+<div class="level-ico">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" transform="scale(0.5) translate(12 12)"/></svg>
+</div>
+<h4>Уровень II</h4>
+<div class="xp">5 000 – 15 000 XP</div>
+<p>Участие в рейдах, помощь новичкам, торговые операции.</p>
+</div>
+<div class="level reveal">
+<div class="level-ico">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" transform="scale(0.65) translate(6 6)"/></svg>
+</div>
+<h4>Уровень III</h4>
+<div class="xp">15 000 – 40 000 XP</div>
+<p>Командование отрядами, строительство крупных объектов.</p>
+</div>
+<div class="level reveal">
+<div class="level-ico">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" transform="scale(0.8) translate(3 3)"/></svg>
+</div>
+<h4>Уровень IV</h4>
+<div class="xp">40 000 – 80 000 XP</div>
+<p>Руководство операциями, стратегические решения.</p>
+</div>
+<div class="level reveal">
+<div class="level-ico">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" transform="scale(1)"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+</div>
+<h4>Уровень V</h4>
+<div class="xp">80 000+ XP</div>
+<p>Максимальный уровень. Доступен только для офицерского состава.</p>
+</div>
+</div>
+
+<div class="table-wrap reveal" style="margin-top:64px">
+<table class="table">
+<thead>
+<tr>
+<th>Ранг</th>
+<th>Опыт (XP)</th>
+<th>Командир отряда</th>
+<th>Доступ к казне</th>
+<th>Права</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><div class="rank-cell"><span class="dot"></span>Новобранец</div></td>
+<td class="xp-cell">0–500</td>
+<td>—</td>
+<td>—</td>
+<td>Базовый</td>
+</tr>
+<tr>
+<td><div class="rank-cell"><span class="dot ok"></span>Солдат</div></td>
+<td class="xp-cell">500–2 000</td>
+<td>—</td>
+<td>—</td>
+<td>Полный доступ к каналам</td>
+</tr>
+<tr>
+<td><div class="rank-cell"><span class="dot ok"></span>Ветеран</div></td>
+<td class="xp-cell">2 000–5 000</td>
+<td>до 5 чел.</td>
+<td>—</td>
+<td>Улучшенная экипировка</td>
+</tr>
+<tr>
+<td><div class="rank-cell"><span class="dot info"></span>Капитан</div></td>
+<td class="xp-cell">5 000–10 000</td>
+<td>до 15 чел.</td>
+<td>—</td>
+<td>Своя группа в Discord</td>
+</tr>
+<tr>
+<td><div class="rank-cell"><span class="dot info"></span>Майор</div></td>
+<td class="xp-cell">10 000–20 000</td>
+<td>до 30 чел.</td>
+<td>Частичный</td>
+<td>Секретная база</td>
+</tr>
+<tr>
+<td><div class="rank-cell"><span class="dot warn"></span>Полковник</div></td>
+<td class="xp-cell">20 000–40 000</td>
+<td>до 60 чел.</td>
+<td>Полный</td>
+<td>Приём в клан</td>
+</tr>
+<tr>
+<td><div class="rank-cell"><span class="dot err"></span>Генерал</div></td>
+<td class="xp-cell">40 000–80 000</td>
+<td>Все войска</td>
+<td>Полный</td>
+<td>Совет клана</td>
+</tr>
+<tr>
+<td><div class="rank-cell"><span class="dot err"></span>Маршал</div></td>
+<td class="xp-cell">80 000+</td>
+<td>Абсолютно</td>
+<td>Абсолютный</td>
+<td>Все права</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="promotion" class="alt">
+<div class="container">
+<div class="sec-head reveal">
+<div class="sec-label">Повышение</div>
+<h2>Как подняться по службе</h2>
+<p>Пошаговый процесс получения нового ранга. Каждое повышение требует подтверждения от вышестоящего командования.</p>
+</div>
+<div class="steps">
+<div class="step reveal">
+<div class="step-num">01</div>
+<div class="step-body">
+<h4>Набирайте опыт (XP)</h4>
+<p>Выполняйте ежедневные и специальные задания клана. Опыт начисляется автоматически после подтверждения задания командиром отряда или системой.</p>
+</div>
+<span class="step-tag required">Обязательно</span>
+</div>
+<div class="step reveal">
+<div class="step-num">02</div>
+<div class="step-body">
+<h4>Достигните порога опыта</h4>
+<p>Когда суммарный опыт достигает порога следующего ранга, в личном кабинете появится уведомление о готовности к повышению.</p>
+</div>
+<span class="step-tag required">Обязательно</span>
+</div>
+<div class="step reveal">
+<div class="step-num">03</div>
+<div class="step-body">
+<h4>Подайте заявку на повышение</h4>
+<p>Через портал клана или Discord отправьте заявку на повышение. Приложите подтверждение выполненных заданий и активность за период.</p>
+</div>
+<span class="step-tag required">Обязательно</span>
+</div>
+<div class="step reveal">
+<div class="step-num">04</div>
+<div class="step-body">
+<h4>Рекомендация командира</h4>
+<p>Ваш прямой командир должен дать рекомендацию. Без его одобрения заявка автоматически отклоняется. Показывайте себя в бою и в командной работе.</p>
+</div>
+<span class="step-tag required">Обязательно</span>
+</div>
+<div class="step reveal">
+<div class="step-num">05</div>
+<div class="step-body">
+<h4>Утверждение Советом клана</h4>
+<p>Финальное решение принимает Совет клана большинством голосов. Рассмотрение занимает от 3 до 7 дней. При одобрении вы получаете новый ранг и права.</p>
+</div>
+<span class="step-tag required">Обязательно</span>
+</div>
+</div>
+</div>
+</section>
+
+<section id="faq">
+<div class="container">
+<div class="sec-head reveal">
+<div class="sec-label">Частые вопросы</div>
+<h2>Ответы на популярные вопросы</h2>
+<p>Если не нашли ответ — задайте вопрос в общем канале Discord клана.</p>
+</div>
+<div class="faq">
+<div class="faq-item reveal">
+<button class="faq-q">
+Как вступить в Пельменский Союз?
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+<div class="faq-a"><div class="faq-a-inner">Подайте заявку через Discord или портал клана. Укажите свой игровой ник, часовой пояс и активность. После первичной проверки вы получите приглашение на сервер и статус Новобранца. Испытательный период длится 7 дней.</div></div>
+</div>
+<div class="faq-item reveal">
+<button class="faq-q">
+Сколько времени нужно играть в день?
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+<div class="faq-a"><div class="faq-a-inner">Минимальная норма — 1 час ежедневно для выполнения базовых заданий. Для офицеров требования выше: от 2-3 часов в день. Отсутствие более 3 дней без предупреждения ведёт к понижению в ранге.</div></div>
+</div>
+<div class="faq-item reveal">
+<button class="faq-q">
+Что будет при отказе от повышения?
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+<div class="faq-a"><div class="faq-a-inner">Отказ в повышении не является исключением из клана. Вы остаётесь в текущем ранге и можете подать заявку повторно через 14 дней, устранив замечания командира. Двукратный отказ не даёт права на третью попытку без прямого одобрения Маршала.</div></div>
+</div>
+<div class="faq-item reveal">
+<button class="faq-q">
+Можно ли иметь несколько аккаунтов?
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+<div class="faq-a"><div class="faq-a-inner">Категорически запрещено. Мультиаккаунты ведут к немедленному исключению из клана и внесению в чёрный список. Один игрок — один аккаунт — один ранг. Разрешены только официальные дополнительные аккаунты для разведки с разрешения Совета.</div></div>
+</div>
+<div class="faq-item reveal">
+<button class="faq-q">
+Как быстро можно пройти от Новобранца до Генерала?
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+<div class="faq-a"><div class="faq-a-inner">При максимальной активности (4-6 часов в день) и выполнении всех заданий путь от Новобранца до Полковника занимает около 3-4 месяцев. До Генерала — от 6 месяцев. До Маршала — только по прямому решению основателя клана, обычно не менее года службы.</div></div>
+</div>
+<div class="faq-item reveal">
+<button class="faq-q">
+Что даёт высокий ранг?
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+<div class="faq-a"><div class="faq-a-inner">Высокий ранг открывает доступ к эксклюзивным ресурсам, право командовать другими бойцами, участие в принятии решений, личную охрану, секретные базы, а также приоритетное место в рейдах. Офицеры получают ежемесячные награды от клановой казны.</div></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="cta-block">
+<div class="container">
+<div class="cta-inner reveal">
+<h2>Присоединяйтесь к Пельменскому Союзу</h2>
+<p>Мы ищем преданных, активных и целеустремлённых игроков. Начните свой путь с Новобранца и дойдите до Маршала — каждый ранг открывает новые возможности.</p>
+<div class="cta-actions">
+<a href="#ranks" class="btn btn-inverse">
+Начать службу
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+</a>
+<a href="#tasks" class="btn btn-outline-inverse">Все задания</a>
+</div>
+</div>
+</div>
+</section>
+
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<div class="logo">
+<svg viewBox="0 0 100 100" fill="none">
+<rect width="100" height="100" rx="22" fill="#0a0a0a"/>
+<path d="M50 20 L70 40 L60 40 L60 70 L40 70 L40 40 L30 40 Z" fill="#fff"/>
+</svg>
+Пельменский Союз
+</div>
+<p>Официальный клан Minecraft, основанный в 2024 году. Мы объединяем сильнейших игроков, строим и защищаем свои территории с честью.</p>
+<div class="footer-socials">
+<a href="#" title="Discord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></a>
+<a href="#" title="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4L3 11l6 2 2 6 3-4 6 4z"/></svg></a>
+<a href="#" title="Youtube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></a>
+<a href="#" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+</div>
+</div>
+<div class="footer-col">
+<h5>Клан</h5>
+<ul>
+<li><a href="#ranks">Ранги</a></li>
+<li><a href="#tasks">Задания</a></li>
+<li><a href="#xp">Система XP</a></li>
+<li><a href="#promotion">Повышение</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h5>Информация</h5>
+<ul>
+<li><a href="#">Устав клана</a></li>
+<li><a href="#">Правила</a></li>
+<li><a href="#">Карта территорий</a></li>
+<li><a href="#">Состав клана</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h5>Связь</h5>
+<ul>
+<li><a href="#">Discord-сервер</a></li>
+<li><a href="#">Заявка на вступление</a></li>
+<li><a href="#">Жалобы</a></li>
+<li><a href="#">Предложения</a></li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2024 Пельменский Союз. Все права защищены.</p>
+<p>Играем честно, воюем достойно</p>
+</div>
+</div>
+</footer>
+
+<script>
+const faqItems=document.querySelectorAll('.faq-item');
+faqItems.forEach(item=>{
+const q=item.querySelector('.faq-q');
+q.addEventListener('click',()=>{
+item.classList.toggle('open');
+});
+});
+const reveals=document.querySelectorAll('.reveal');
+const revealObserver=new IntersectionObserver((entries)=>{
+entries.forEach((entry,index)=>{
+if(entry.isIntersecting){
+setTimeout(()=>{
+entry.target.classList.add('visible');
+},index*60);
+revealObserver.unobserve(entry.target);
+}
+});
+},{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+reveals.forEach(el=>revealObserver.observe(el));
+document.querySelectorAll('.task-check').forEach(check=>{
+check.addEventListener('click',()=>{
+check.classList.toggle('done');
+});
+});
+const navLinks=document.querySelectorAll('.nav-links a[href^="#"]');
+const sections=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+let current='';
+sections.forEach(section=>{
+const top=section.offsetTop-100;
+if(window.scrollY>=top){
+current=section.getAttribute('id');
+}
+});
+navLinks.forEach(link=>{
+link.classList.remove('active');
+if(link.getAttribute('href')==='#'+current){
+link.classList.add('active');
+}
+});
+});
+document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
+anchor.addEventListener('click',function(e){
+const href=this.getAttribute('href');
+if(href.length>1){
+const target=document.querySelector(href);
+if(target){
+e.preventDefault();
+const offset=80;
+const top=target.getBoundingClientRect().top+window.scrollY-offset;
+window.scrollTo({top,behavior:'smooth'});
+}
+}
+});
+});
+</script>
+
+</body>
+</html>
